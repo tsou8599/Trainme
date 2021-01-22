@@ -329,7 +329,9 @@
     <section class="forms-section">
       <h1 class="section-title">Animated Forms</h1>
       <div class="forms">
-        <div class="form-wrapper is-active">
+      
+      
+        <div class="form-wrapper is-active" id="logIn">
           <button type="button" class="switcher switcher-login">
             Login
             <span class="underline"></span>
@@ -339,7 +341,7 @@
               <legend>Please, enter your email and password for login.</legend>
               <div class="input-block">
                 <label for="login-email">E-mail</label>
-                <input id="login-email" type="email" name="email" required />
+                <input id="login-email" type="email" name="lgEmail" required />
                 <div>
                 	<Font color='red' size="-3">${ErrorMsgKey.AccountEmptyError}</Font>
                 </div>
@@ -356,7 +358,10 @@
             <button type="submit" class="btn-login">Login</button>
           </form>
         </div>
-        <div class="form-wrapper">
+        
+        
+        
+        <div class="form-wrapper" id="signUp">
           <button type="button" class="switcher switcher-signup">
             Sign Up
             <span class="underline"></span>
@@ -444,6 +449,23 @@
           this.parentElement.classList.add("is-active");
         });
       });
+      
+      
+       <c:if test="${MsgMap.from != null}">
+        var forms = document.getElementsByClassName('form-wrapper');
+        for (let i = 0; i < forms.length; i++) {
+          const form = forms[i];
+          form.classList.remove("is-active");
+        }
+        
+        
+        var id = "${MsgMap.from}";
+        console.log(id);
+        var target = document.getElementById(id);
+        target.classList.add('is-active');
+      	
+      	
+       </c:if>
     </script>
   </body>
 </html>

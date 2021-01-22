@@ -28,11 +28,12 @@ public class LoginServlet_new extends HttpServlet {
 		HttpSession session = request.getSession();
 		// 定義存放錯誤訊息的Map物件
 		Map<String, String> errorMsgMap = new HashMap<String, String>();
+		
 
 		// 將errorMsgMap放入request物件內，識別字串為 "ErrorMsgKey"
 		request.setAttribute("ErrorMsgKey", errorMsgMap);
 		// 1. 讀取使用者輸入資料
-		String email = request.getParameter("email");
+		String email = request.getParameter("lgEmail");
 		String password = request.getParameter("pswd");
 		
 		String requestURI = (String) session.getAttribute("requestURI");
@@ -50,8 +51,7 @@ public class LoginServlet_new extends HttpServlet {
 
 		// 如果 errorMsgMap 不是空的，表示有錯誤，交棒給login.jsp
 		if (!errorMsgMap.isEmpty()) {
-			RequestDispatcher rd = request.getRequestDispatcher("/_02_login\\tr-login.jsp");
-			rd.forward(request, response);
+			errorResponse(request,response,errorMsgMap);
 			return;
 		}
 
@@ -117,9 +117,14 @@ public class LoginServlet_new extends HttpServlet {
 			return;
 		} else {
 			// 如果errorMsgMap不是空的，表示有錯誤，交棒給login.jsp
-			RequestDispatcher rd = request.getRequestDispatcher("/_02_login\\tr-login.jsp");
-			rd.forward(request, response);
+			errorResponse(request,response,errorMsgMap);
 			return;
 		}
+	}
+	
+	private void errorResponse(HttpServletRequest request, HttpServletResponse response, Map<String, String> errorMsgMap) throws ServletException, IOException{
+		errorMsgMap.put("from", "logIn");
+		RequestDispatcher rd = request.getRequestDispatcher("/_02_login\\tr-login.jsp");
+		rd.forward(request, response);
 	}
 }
