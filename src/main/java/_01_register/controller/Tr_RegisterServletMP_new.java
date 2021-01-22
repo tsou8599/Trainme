@@ -206,8 +206,8 @@ public class Tr_RegisterServletMP_new extends HttpServlet {
 		rd.forward(request, response);
 	}
 
-	private void test(HttpServletRequest request, HttpServletResponse response, Map<String, String> errorMsg)
+	private void gogogogo(HttpServletRequest request, HttpServletResponse response, Map<String, String> errorMsg)
 			throws ServletException, IOException {
-				// do somthing
+				// gogogogogo
 	}
 }
