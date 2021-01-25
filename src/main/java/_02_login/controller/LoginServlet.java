@@ -15,8 +15,8 @@ import javax.servlet.http.HttpSession;
 
 import _00_init.util.GlobalService;
 import _01_register.model.StudentBean;
-import _01_register.service.StudentService;
-import _01_register.service.impl.StudentServiceImpl;
+import _01_register.service.MemberService;
+import _01_register.service.impl.MemberServiceImpl;
 
 @WebServlet("/_02_login/login.do")
 public class LoginServlet extends HttpServlet {
@@ -82,14 +82,14 @@ public class LoginServlet extends HttpServlet {
 
 		// 4. 進行 Business Logic 運算
 		// 將MemberServiceImpl類別new為物件，存放物件參考的變數為 loginService
-		StudentService studentService = new StudentServiceImpl();
+		MemberService studentService = new MemberServiceImpl();
 
 		// 將密碼加密兩次，以便與存放在表格內的密碼比對
 //		password = GlobalService.getMD5Endocing(GlobalService.encryptString(password));
 		StudentBean sb = null;
 		try {
 			// 呼叫 loginService物件的 checkIDPassword()，傳入userid與password兩個參數
-			sb = studentService.checkIdPassword(email, password);
+			sb = (StudentBean) studentService.checkIdPassword(email, password);
 			if (sb != null) {
 				// OK, 登入成功, 將mb物件放入Session範圍內，識別字串為"LoginOK"
 				session.setAttribute("LoginOK", sb);

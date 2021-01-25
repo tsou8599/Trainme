@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Context displayName="dmoe" docBase="dmoe"
-	path="dmoe" reloadable="true">
+<Context displayName="trainme" docBase="trainme"
+	path="trainme" reloadable="true">
 
 	
 

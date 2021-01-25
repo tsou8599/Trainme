@@ -14,14 +14,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import _00_init.util.GlobalService;
+import _01_register.model.MemberBean;
 import _01_register.model.StudentBean;
-import _01_register.service.StudentService;
-import _01_register.service.impl.StudentServiceImpl;
+import _01_register.model.TrainerBean;
+import _01_register.service.MemberService;
+import _01_register.service.impl.MemberServiceImpl;
 
 @WebServlet("/_02_login/tr-login.do")
 public class LoginServlet_new extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private boolean isValid(String val) {
+		return val != null && val.trim().length() > 0;
+	}
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
@@ -36,16 +42,15 @@ public class LoginServlet_new extends HttpServlet {
 		String email = request.getParameter("lgEmail");
 		String password = request.getParameter("pswd");
 		
-		String requestURI = (String) session.getAttribute("requestURI");
 		// 2. 進行必要的資料轉換
 		// 無
 		// 3. 檢查使用者輸入資料
 		// 如果 userId 欄位為空白，放一個錯誤訊息到 errorMsgMap 之內
-		if (email == null || email.trim().length() == 0) {
+		if (! isValid(email)) {
 			errorMsgMap.put("EmailEmptyError", "信箱必須輸入");
 		}
 		// 如果 password 欄位為空白，放一個錯誤訊息到 errorMsgMap 之內
-		if (password == null || password.trim().length() == 0) {
+		if (! isValid(password)) {
 			errorMsgMap.put("PasswordEmptyError", "密碼欄必須輸入");
 		}
 
@@ -55,76 +60,53 @@ public class LoginServlet_new extends HttpServlet {
 			return;
 		}
 
-		// **********Remember Me****************************
-//		Cookie cookieUser = null;
-//		Cookie cookiePassword = null;
-//		Cookie cookieRememberMe = null;
-//		
-//		
-//	
-//			cookieUser = new Cookie("user", email);
-//			cookieUser.setMaxAge(0); // MaxAge==0 表示要請瀏覽器刪除此Cookie
-//			cookieUser.setPath(request.getContextPath());
-//
-//			String encodePassword = GlobalService.encryptString(password);
-//			cookiePassword = new Cookie("password", encodePassword);
-//			cookiePassword.setMaxAge(0);
-//			cookiePassword.setPath(request.getContextPath());
-//
-//			cookieRememberMe = new Cookie("rm", "true");
-//			cookieRememberMe.setMaxAge(0);
-//			cookieRememberMe.setPath(request.getContextPath());
-//		
-//		response.addCookie(cookieUser);
-//		response.addCookie(cookiePassword);
-//		response.addCookie(cookieRememberMe);
-		// ********************************************
+		
 
 		// 4. 進行 Business Logic 運算
 		// 將MemberServiceImpl類別new為物件，存放物件參考的變數為 loginService
-		StudentService studentService = new StudentServiceImpl();
+		MemberService service = new MemberServiceImpl();
 
 		// 將密碼加密兩次，以便與存放在表格內的密碼比對
 //		password = GlobalService.getMD5Endocing(GlobalService.encryptString(password));
-		StudentBean sb = null;
+		MemberBean mb = null;
 		try {
+			
 			// 呼叫 loginService物件的 checkIDPassword()，傳入userid與password兩個參數
-			sb = studentService.checkIdPassword(email, password);
-			if (sb != null) {
+			mb = service.checkIdPassword(email, password);
+			
+			
+			
+			if (mb != null) {
 				// OK, 登入成功, 將mb物件放入Session範圍內，識別字串為"LoginOK"
-				session.setAttribute("LoginOK", sb);
-			} else {
-				// NG, 登入失敗, userid與密碼的組合錯誤，放相關的錯誤訊息到 errorMsgMap 之內
-				errorMsgMap.put("LoginError", "該帳號不存在或密碼錯誤");
-			}
+				
+				// 是否以驗證過
+				
+				
+				session.setAttribute("LoginOK", mb);
+				response.sendRedirect("/dmot/_02_login/login_success.jsp");
+				return;
+			
+			} 
+			
+				
+			// NG, 登入失敗, userid與密碼的組合錯誤，放相關的錯誤訊息到 errorMsgMap 之內
+			errorMsgMap.put("LoginError", "該帳號不存在或密碼錯誤");
+			errorResponse(request,response,errorMsgMap);
+			return;
+			
 		} catch (RuntimeException ex) {
 			errorMsgMap.put("LoginError", ex.getMessage());
-		}
-
-		// 5.依照 Business Logic 運算結果來挑選適當的畫面
-		// 如果 errorMsgMap 是空的，表示沒有任何錯誤，交棒給下一棒
-		if (errorMsgMap.isEmpty()) {
-//			if (requestURI != null) {
-//				requestURI = (requestURI.length() == 0 ? request.getContextPath() : requestURI);
-//				response.sendRedirect(response.encodeRedirectURL(requestURI));
-//				return;
-//			} else {
-//				response.sendRedirect(response.encodeRedirectURL(request.getContextPath()));
-//				return;
-//			}
-			
-			response.sendRedirect("/Trainme/_02_login/login_success.jsp");
-			return;
-		} else {
-			// 如果errorMsgMap不是空的，表示有錯誤，交棒給login.jsp
 			errorResponse(request,response,errorMsgMap);
 			return;
 		}
+
+		
 	}
 	
+	// 有錯誤時，回傳回原本頁面
 	private void errorResponse(HttpServletRequest request, HttpServletResponse response, Map<String, String> errorMsgMap) throws ServletException, IOException{
 		errorMsgMap.put("from", "logIn");
-		RequestDispatcher rd = request.getRequestDispatcher("/_02_login\\tr-login.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/_02_login\\st-login.jsp");
 		rd.forward(request, response);
 	}
 }

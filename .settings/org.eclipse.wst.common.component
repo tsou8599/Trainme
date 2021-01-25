@@ -4,7 +4,7 @@
     
     
     
-    <wb-module deploy-name="dmot">
+    <wb-module deploy-name="trainme">
                                                 
         
         
@@ -35,7 +35,7 @@
         
         
         <property name="java-output-path" value="/eDMo/target/classes"/>
-        <property name="context-root" value="dmot"/>
+        <property name="context-root" value="trainme"/>
                                             
     
     

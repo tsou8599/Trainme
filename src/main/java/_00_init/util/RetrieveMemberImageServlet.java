@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import _01_register.model.StudentBean;
-import _01_register.service.StudentService;
-import _01_register.service.impl.StudentServiceImpl;
+import _01_register.service.MemberService;
+import _01_register.service.impl.MemberServiceImpl;
 
 @WebServlet("/_00_init/getMemberImage")
 public class RetrieveMemberImageServlet extends HttpServlet {
@@ -30,7 +30,7 @@ public class RetrieveMemberImageServlet extends HttpServlet {
 			// 讀取瀏覽器傳送來的主鍵
 			String id = request.getParameter("id");
 			// 讀取瀏覽器傳送來的type，以分辨要處理哪個表格
-			StudentService studentService = new StudentServiceImpl();
+			MemberService studentService = new MemberServiceImpl();
 			StudentBean bean = studentService.queryMember(id);
 //			if (bean != null) {
 //				blob = bean.getMemberImage();

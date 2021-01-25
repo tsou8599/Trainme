@@ -2,22 +2,33 @@ package _01_register.service.impl;
 
 
 
-import _01_register.dao.StudentDao;
-import _01_register.dao.impl.StudentDaoImpl_Jdbc;
+import java.util.List;
+
+import _01_register.dao.MemberDao;
+import _01_register.dao.impl.MemberDaoImpl_Jdbc;
+import _01_register.model.MemberBean;
 import _01_register.model.StudentBean;
-import _01_register.service.StudentService;
+import _01_register.model.TrainerBean;
+import _01_register.service.MemberService;
 import _04_ShoppingCart.model.OrderBean;
+import model.GymBean;
 
-public class StudentServiceImpl implements StudentService {
+public class MemberServiceImpl implements MemberService {
 
-	StudentDao  dao ;
-	public StudentServiceImpl() {
-		this.dao = new StudentDaoImpl_Jdbc();
+	MemberDao  dao ;
+	public MemberServiceImpl() {
+		this.dao = new MemberDaoImpl_Jdbc();
 	}
 
 	@Override
 	public int saveStudent(StudentBean sb) {
 		return dao.saveStudent(sb);
+	}
+	
+	@Override
+	public int saveTrainer(TrainerBean tr) {
+		
+		return dao.saveTrainer(tr);
 	}
 
 	@Override
@@ -38,10 +49,29 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public StudentBean checkIdPassword(String email, String password) {
+	public MemberBean checkIdPassword(String email, String password) {
 		return dao.checkIdPassword(email , password);
 		
 	}
+
+	@Override
+	public List<StudentBean> listAll() {
+		
+		return dao.listAll();
+	}
+
+	@Override
+	public List<GymBean> gymList() {
+		
+		return dao.gymList();
+	}
+
+	@Override
+	public int checkverification(int gymId) {
+		
+		return dao.checkverification(gymId);
+	}
+	
 
 //	@Override
 //	public StudentBean queryMember(String id) {

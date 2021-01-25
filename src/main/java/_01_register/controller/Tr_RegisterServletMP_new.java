@@ -23,13 +23,14 @@ import javax.servlet.http.Part;
 
 import _00_init.util.GlobalService;
 import _01_register.model.StudentBean;
-import _01_register.service.StudentService;
-import _01_register.service.impl.StudentServiceImpl;
+import _01_register.service.MemberService;
+import _01_register.service.impl.MemberServiceImpl;
+
 
 @MultipartConfig(location = "", fileSizeThreshold = 5 * 1024 * 1024, maxFileSize = 1024 * 1024
 		* 500, maxRequestSize = 1024 * 1024 * 500 * 5)
 
-@WebServlet("/_01_tr_register/Tr_RegisterServletMP_new.do")
+@WebServlet("/dmot/_01_tr_register/Tr_RegisterServletMP_new.do")
 
 public class Tr_RegisterServletMP_new extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -45,6 +46,11 @@ public class Tr_RegisterServletMP_new extends HttpServlet {
 	private Matcher matcherMail = null;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		
+//		JavaMailer javaMailer = new JavaMailer();
+//		javaMailer.sendMail("test@gmail.com", "嗨嗨", "<h1>嗨嗨嗨</h1>");
+		
+		
 		request.setCharacterEncoding("UTF-8"); // 文字資料轉內碼
 		// 準備存放錯誤訊息的Map物件
 		Map<String, String> errorMsg = new HashMap<String, String>();
@@ -159,7 +165,7 @@ public class Tr_RegisterServletMP_new extends HttpServlet {
 				// StudentServiceImpl類別的功能：
 				// 1.檢查信箱是否已經存在，已存在的信箱不能使用，回傳相關訊息通知使用者修改
 				// 2.若無問題，儲存會員的資料
-				StudentService service = new StudentServiceImpl();
+				MemberService service = new MemberServiceImpl();
 				if (service.idExists(email)) {
 					errorMsg.put("errorIdDup", "此信箱已存在，請換新信箱");
 				} else {
@@ -171,14 +177,14 @@ public class Tr_RegisterServletMP_new extends HttpServlet {
 //						GlobalService.encryptString(password));
 
 					// 將所有會員資料封裝到StudentBean(類別的)物件
-					StudentBean stdent = new StudentBean(null, name, phone, birthday, email, password, id, sex);
 
+					StudentBean	stdent = new StudentBean(null, null, name, phone, email, birthday, passwordcheck, id, sex, null, null);
 					// 呼叫StudentService的saveStudent方法
 					int n = service.saveStudent(stdent);
 					if (n == 1) {
 //=============================================================================================註冊成功後導入頁面	
 						msgOK.put("InsertOK", "<Font color='red'>新增成功，請開始使用本系統</Font>");
-						response.sendRedirect("/Trainme/_01_tr_register/register_success.jsp");
+						response.sendRedirect("/dmot/_01_tr_register/register_success.jsp");
 						return;
 					} else {
 						errorMsg.put("errorIdDup", "新增此筆資料有誤(RegisterServlet)");
@@ -202,12 +208,9 @@ public class Tr_RegisterServletMP_new extends HttpServlet {
 	private void errorResponse(HttpServletRequest request, HttpServletResponse response, Map<String, String> errorMsg)
 			throws ServletException, IOException {
 		errorMsg.put("from", "signUp");
-		RequestDispatcher rd = request.getRequestDispatcher("/_02_login\\tr-login.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/_02_login\\st-login.jsp");
 		rd.forward(request, response);
 	}
 
-	private void gogogogo(HttpServletRequest request, HttpServletResponse response, Map<String, String> errorMsg)
-			throws ServletException, IOException {
-				// gogogogogo
-	}
+
 }
