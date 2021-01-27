@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import _01_register.model.MemberBean;
 import _01_register.model.StudentBean;
 import _01_register.service.MemberService;
 import _01_register.service.impl.MemberServiceImpl;
@@ -31,7 +32,7 @@ public class RetrieveMemberImageServlet extends HttpServlet {
 			String id = request.getParameter("id");
 			// 讀取瀏覽器傳送來的type，以分辨要處理哪個表格
 			MemberService studentService = new MemberServiceImpl();
-			StudentBean bean = studentService.queryMember(id);
+			MemberBean bean = studentService.queryMember(id);
 //			if (bean != null) {
 //				blob = bean.getMemberImage();
 //				if (blob != null) { 
