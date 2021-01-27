@@ -13,7 +13,7 @@ import model.GymBean;
 
 public interface MemberDao {
 	
-	public boolean idExists(int type , String email);
+	public boolean idExists(String email);
 
 	public int saveStudent(StudentBean mb) ;
 	

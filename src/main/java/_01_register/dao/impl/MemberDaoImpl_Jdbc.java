@@ -60,14 +60,13 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 		}
 		return n;
 	}
-	
+
 	// 儲存TrainerBean物件，將參數tr新增到Trainer表格內。
 	@Override
 	public int saveTrainer(TrainerBean tr) {
-		String sql = "insert into trainer " 
-				   + " (id, name, phone, birthday, "
-				   + " email,  password, id_number, sex, year, gym_id, hash)" 
-				   + " values (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into trainer " + " (id, name, phone, birthday, "
+				+ " email,  password, id_number, sex, year, gym_id, hash)"
+				+ " values (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		int n = 0;
 		try (Connection con = ds.getConnection(); PreparedStatement ps = con.prepareStatement(sql);) {
 
@@ -81,7 +80,6 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 			ps.setInt(8, tr.getYear());
 			ps.setInt(9, tr.getGymId());
 			ps.setString(10, tr.getMyHash());
-			
 
 			n = ps.executeUpdate();
 		} catch (Exception ex) {
@@ -94,26 +92,31 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 	// 判斷參數id(會員帳號)是否已經被現有客戶使用，如果是，傳回true，表示此id不能使用，
 	// 否則傳回false，表示此id可使用。
 	@Override
-	public boolean idExists(int type , String email) {
-		String sql = null;
+	public boolean idExists(String email) {
+
 		boolean exist = false;
-		if(type == 1) {
-			 sql = "SELECT * FROM student WHERE email = ?";
-		}
-		if(type == 2) {
-			 sql = "SELECT * FROM trainer WHERE email = ?";
-		}
-		try (Connection connection = ds.getConnection(); PreparedStatement ps = connection.prepareStatement(sql);) {
-			ps.setString(1, email);
-			try (ResultSet rs = ps.executeQuery();) {
-				if (rs.next()) {
-					exist = true;
+		String[] types = { "student", "trainer" };
+
+		for (int i = 0; i < types.length; i++) {
+
+			String sql = "SELECT * FROM " + types[i] + " WHERE email = ? ";
+			try (Connection con = ds.getConnection(); PreparedStatement ps = con.prepareStatement(sql);) {
+				ps.setString(1, email);
+
+				try (ResultSet rs = ps.executeQuery();) {
+					if (rs.next()) {
+						exist = true;
+					}
 				}
 			}
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException("StudentDaoImpl_Jdbc類別#idExists()發生例外: " + ex.getMessage());
+
+			catch (SQLException ex) {
+				ex.printStackTrace();
+				throw new RuntimeException("StudentDaoImpl_Jdbc類別#idExists()發生例外: " + ex.getMessage());
+			}
 		}
+		
+		
 		return exist;
 	}
 
@@ -149,38 +152,32 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 
 //	// 檢查使用者在登入時輸入的帳號與密碼是否正確。如果正確，傳回該帳號所對應的MemberBean物件，
 //	// 否則傳回 null。
-	 @Override
-	    public MemberBean checkIdPassword(String email, String password) {
-	        String[] types = {"student", "trainer"};
-	        for (int i = 0; i < types.length; i++) {
-	            
-	            String sql = "SELECT * FROM " + types[i] + " WHERE email = ? and password = ?";
-	            try (
-	                    Connection con = ds.getConnection();
-	                    PreparedStatement ps = con.prepareStatement(sql);
-	            ) {
-	                ps.setString(1, email);
-	                ps.setString(2, password);
-	                try (ResultSet rs = ps.executeQuery();) {
-	                    if (rs.next()) {
-	                        MemberBean sth = types[i] == "student"
-	                                ? setStudentBean(rs)
-	                                : setTrainerBean(rs);
+	@Override
+	public MemberBean checkIdPassword(String email, String password) {
+		String[] types = { "student", "trainer" };
+		for (int i = 0; i < types.length; i++) {
 
-	                        if (sth != null) {
-	                            return sth;
-	                        }
-	                    }
-	                }
-	            } catch (SQLException ex) {
-	                ex.printStackTrace();
-	                throw new RuntimeException("MemberDaoImpl_Jdbc類別#checkIDPassword()發生SQL例外: " + ex.getMessage());
-	            }
-	        }
-	       
-	        return null;
-	    }
-	
+			String sql = "SELECT * FROM " + types[i] + " WHERE email = ? and password = ?";
+			try (Connection con = ds.getConnection(); PreparedStatement ps = con.prepareStatement(sql);) {
+				ps.setString(1, email);
+				ps.setString(2, password);
+				try (ResultSet rs = ps.executeQuery();) {
+					if (rs.next()) {
+						MemberBean sth = types[i] == "student" ? setStudentBean(rs) : setTrainerBean(rs);
+
+						if (sth != null) {
+							return sth;
+						}
+					}
+				}
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+				throw new RuntimeException("MemberDaoImpl_Jdbc類別#checkIDPassword()發生SQL例外: " + ex.getMessage());
+			}
+		}
+
+		return null;
+	}
 
 	@Override
 	public List<StudentBean> listAll() {
@@ -200,7 +197,7 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 					sb.setPassword(rs.getString("password"));
 					sb.setId(rs.getString("id_number"));
 					sb.setSex(rs.getString("sex"));
-					
+
 					list.add(sb);
 				}
 			}
@@ -216,7 +213,7 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 		GymBean gb = null;
 		List<GymBean> gyms = new ArrayList<GymBean>();
 		String sql = "SELECT * FROM gym;";
-		
+
 		try (Connection con = ds.getConnection(); PreparedStatement ps = con.prepareStatement(sql);) {
 
 			try (ResultSet rs = ps.executeQuery();) {
@@ -227,7 +224,7 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 					gb.setPhone(rs.getString("phone"));
 					gb.setAddress(rs.getString("address"));
 					gb.setVerification(rs.getInt("verification"));
-					
+
 					gyms.add(gb);
 				}
 			}
@@ -237,6 +234,7 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 		}
 		return gyms;
 	}
+
 //=========================================================================
 	@Override
 	public int checkverification(int gymId) {
@@ -244,51 +242,47 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 		String sql = "SELECT verification FROM gym WHERE id = ?";
 		try (Connection connection = ds.getConnection(); PreparedStatement ps = connection.prepareStatement(sql);) {
 			ps.setInt(1, gymId);
-			
+
 			try (ResultSet rs = ps.executeQuery();) {
 				while (rs.next()) {
-					
+
 					verification = rs.getInt("verification");
 				}
 			}
-			
-			
+
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 			throw new RuntimeException("StudentDaoImpl_Jdbc類別#checkverification()發生例外: " + ex.getMessage());
 		}
 		return verification;
 	}
-	
 
-	
-	 public StudentBean setStudentBean(ResultSet rs) throws SQLException {
-	        StudentBean sb = new StudentBean();
-	        sb.setStNo(rs.getInt("id"));
-	        sb.setName(rs.getString("name"));
-	        sb.setPhone(rs.getString("phone"));
-	        sb.setBirth(rs.getDate("birthday"));
-	        sb.setEmail(rs.getString("email"));
-	        sb.setPassword(rs.getString("password"));
-	        sb.setId(rs.getString("id_number"));
-	        sb.setSex(rs.getString("sex"));
-	        return sb;
-	    }
-	
-	   public TrainerBean setTrainerBean(ResultSet rs) throws SQLException {
-	        TrainerBean tr = new TrainerBean();
-	        tr.setTrNo(rs.getInt("id"));
-	        tr.setName(rs.getString("name"));
-	        tr.setPhone(rs.getString("phone"));
-	        tr.setBirth(rs.getDate("birthday"));
-	        tr.setEmail(rs.getString("email"));
-	        tr.setPassword(rs.getString("password"));
-	        tr.setId(rs.getString("id_number"));
-	        tr.setSex(rs.getString("sex"));
-	        return tr;
-	    }
+	public StudentBean setStudentBean(ResultSet rs) throws SQLException {
+		StudentBean sb = new StudentBean();
+		sb.setStNo(rs.getInt("id"));
+		sb.setName(rs.getString("name"));
+		sb.setPhone(rs.getString("phone"));
+		sb.setBirth(rs.getDate("birthday"));
+		sb.setEmail(rs.getString("email"));
+		sb.setPassword(rs.getString("password"));
+		sb.setId(rs.getString("id_number"));
+		sb.setSex(rs.getString("sex"));
+		return sb;
+	}
 
-	
+	public TrainerBean setTrainerBean(ResultSet rs) throws SQLException {
+		TrainerBean tr = new TrainerBean();
+		tr.setTrNo(rs.getInt("id"));
+		tr.setName(rs.getString("name"));
+		tr.setPhone(rs.getString("phone"));
+		tr.setBirth(rs.getDate("birthday"));
+		tr.setEmail(rs.getString("email"));
+		tr.setPassword(rs.getString("password"));
+		tr.setId(rs.getString("id_number"));
+		tr.setSex(rs.getString("sex"));
+		return tr;
+	}
+
 }
 //	/*
 //	 * 功能：更新客戶的未付款訂購金額。

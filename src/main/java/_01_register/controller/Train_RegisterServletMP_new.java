@@ -197,7 +197,7 @@ public class Train_RegisterServletMP_new extends HttpServlet {
 			
 			try {
 				MemberService service = new MemberServiceImpl();
-				if (service.idExists(2,email)) {
+				if (service.idExists(email)) {
 					errorMsg.put("emailExists", "此信箱已存在，請換新信箱");
 					errorResponse(request, response, errorMsg);
 					return;

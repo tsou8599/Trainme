@@ -376,7 +376,7 @@
                 <label for="signup-email">E-mail :</label>
                 <input id="signup-email" type="email" name="email" value="${param.email}" required />
                 <div>
-                  <font color="red" size="-1">${MsgMap.errorEmail} ${MsgMap.emailError} </font> 
+                  <font color="red" size="-1">${MsgMap.errorEmail} ${MsgMap.emailError} ${MsgMap.errorIdDup}  </font> 
                  </div>
               </div>
               <div class="input-block">
