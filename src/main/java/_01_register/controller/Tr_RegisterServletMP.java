@@ -162,7 +162,7 @@ public class Tr_RegisterServletMP extends HttpServlet {
 				// 1.檢查信箱是否已經存在，已存在的信箱不能使用，回傳相關訊息通知使用者修改
 				// 2.若無問題，儲存會員的資料
 				MemberService service = new MemberServiceImpl();
-				if (service.idExists(email)) {
+				if (service.idExists(1,email)) {
 					errorMsg.put("errorIdDup", "此信箱已存在，請換新信箱");
 				} else {
 					

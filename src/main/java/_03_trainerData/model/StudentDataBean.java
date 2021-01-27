@@ -1,4 +1,4 @@
-package _01_register.model;
+package _03_trainerData.model;
 
 import java.io.Serializable;
 import java.sql.Blob;
