@@ -16,9 +16,7 @@ import _01_register.service.MemberService;
 import _01_register.service.impl.MemberServiceImpl;
 import model.GymBean;
 
-/**
- * Servlet implementation class Gymlist
- */
+
 @WebServlet("/Gymlist")
 public class Gymlist extends HttpServlet {
 	private static final long serialVersionUID = 1L;

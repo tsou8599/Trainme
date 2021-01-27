@@ -1,16 +1,13 @@
 package _01_register.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,23 +23,18 @@ import javax.servlet.http.Part;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import com.google.gson.Gson;
-
-
 import _01_register.model.StudentBean;
-import _01_register.model.TrainerBean;
 import _01_register.service.MemberService;
 import _01_register.service.impl.MemberServiceImpl;
 import mail.SendingEmail;
-import model.GymBean;
 
 
 @MultipartConfig(location = "", fileSizeThreshold = 5 * 1024 * 1024, maxFileSize = 1024 * 1024
 		* 500, maxRequestSize = 1024 * 1024 * 500 * 5)
 
-@WebServlet("/_01_tr_register/Train_RegisterServletMP_new.do")
+@WebServlet("/dmot/_01_tr_register/Student_RegisterServletMP_new.do")
 
-public class Train_RegisterServletMP_new extends HttpServlet {
+public class Student_RegisterServletMP_new extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	// 設定密碼欄位必須由大寫字母、小寫字母、數字與 !@#$%!^'" 等四組資料組合而成，且長度不能小於八個字元
@@ -54,8 +46,6 @@ public class Train_RegisterServletMP_new extends HttpServlet {
 	private static final String Email_PATTERN = "^\\w{1,63}@[a-zA-Z0-9]{2,63}\\.[a-zA-Z]{2,63}(\\.[a-zA-Z]{2,63})?$";
 	private Pattern patternMail = null;
 	private Matcher matcherMail = null;
-	
-	 
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
@@ -74,6 +64,7 @@ public class Train_RegisterServletMP_new extends HttpServlet {
 		HttpSession session = request.getSession();
 		request.setAttribute("MsgMap", errorMsg); // 顯示錯誤訊息
 		session.setAttribute("MsgOK", msgOK); // 顯示正常訊息
+		
 
 		String name = "";
 		String phone = "";
@@ -83,15 +74,11 @@ public class Train_RegisterServletMP_new extends HttpServlet {
 		String passwordcheck = "";
 		String id = "";
 		String sex = "";
-		Integer year = null;
-		Integer gymId = null;
-		Integer gympassword = null;
 		String myHash = "";
 		
 		Random theRandom = new Random();
 		theRandom.nextInt(999999);
 		myHash = DigestUtils.md5Hex("" +	theRandom);
-		
 
 		// 取出HTTP multipart request內所有的parts
 		Collection<Part> parts = request.getParts();
@@ -101,7 +88,6 @@ public class Train_RegisterServletMP_new extends HttpServlet {
 			for (Part p : parts) {
 				String fldName = p.getName();
 				String value = request.getParameter(fldName);
-//				
 
 				// 1. 讀取使用者輸入資料，進行必要的資料轉換
 				if (p.getContentType() == null) {
@@ -128,14 +114,6 @@ public class Train_RegisterServletMP_new extends HttpServlet {
 						id = value;
 					} else if (fldName.equals("sex")) {
 						sex = value;
-					} else if (fldName.equals("year")) {
-						year = Integer.valueOf(value);
-					} else if (fldName.equals("gymId")) {
-//						gymId =  value;
-						gymId =  Integer.valueOf(value);
-						
-					} else if (fldName.equals("verification")) {
-						gympassword = Integer.valueOf(value);
 					}
 
 				}
@@ -163,7 +141,6 @@ public class Train_RegisterServletMP_new extends HttpServlet {
 			if (id == null || id.trim().length() == 0) {
 				errorMsg.put("errorId", "身分證必須輸入");
 			}
-			
 
 			// 如果沒有錯誤
 			if (errorMsg.isEmpty()) {
@@ -179,7 +156,6 @@ public class Train_RegisterServletMP_new extends HttpServlet {
 				matcherMail = patternMail.matcher(email);
 				if (!matcherMail.matches()) {
 					errorMsg.put("emailError", "Email欄位必須包含@符號，必須包含點，點和@之間必須有字元");
-					
 				}
 
 				// 檢查密碼欄位和密碼確認欄位是否一致
@@ -187,47 +163,46 @@ public class Train_RegisterServletMP_new extends HttpServlet {
 					errorMsg.put("passwordCheckError", "密碼欄位並須和密碼確認一致");
 				}
 			}
-			
 			// 如果有錯誤
 			if (!errorMsg.isEmpty()) {
 				errorResponse(request, response, errorMsg);
 				return;
 			}
-			
-			
 			try {
+				// 4. 產生StudentService物件，以便進行Business Logic運算
+				// StudentServiceImpl類別的功能：
+				// 1.檢查信箱是否已經存在，已存在的信箱不能使用，回傳相關訊息通知使用者修改
+				// 2.若無問題，儲存會員的資料
 				MemberService service = new MemberServiceImpl();
-				if (service.idExists(2,email)) {
-					errorMsg.put("emailExists", "此信箱已存在，請換新信箱");
-					errorResponse(request, response, errorMsg);
-					return;
-				}
-				
-				if(service.checkverification(gymId) != gympassword) {
-					errorMsg.put("errorverification", "驗證碼錯誤");
-					errorResponse(request, response, errorMsg);
-					return;
-				}
+				if (service.idExists(1,email)) {
+					errorMsg.put("errorIdDup", "此信箱已存在，請換新信箱");
+				} else {
 
-
+//=============================================================================================密碼加密					
+					// 為了配合Hibernate的版本。
+					// 要在此加密，不要在 dao.saveMember(mem)進行加密
+//				password = GlobalService.getMD5Endocing(
+//						GlobalService.encryptString(password));
 
 					// 將所有會員資料封裝到StudentBean(類別的)物件
-					TrainerBean trainer = new TrainerBean(null, null, name, phone, email, birthday, password, id, sex, year, gymId, null, null, myHash);
+
+					
+//					StudentBean	stdent = new StudentBean(null, null, name, phone, email, birthday, passwordcheck, id, sex, null, null,myHash);
+					StudentBean stdent = new StudentBean(null, null, name, phone, email, birthday, password, id, sex, null, null, myHash);
+					
 					// 呼叫StudentService的saveStudent方法
-					int n = service.saveTrainer(trainer);
+					int n = service.saveStudent(stdent);
 					if (n == 1) {
-						SendingEmail se = new SendingEmail(2,email, myHash);
-						se.sendMail();
 //=============================================================================================註冊成功後導入頁面	
+						SendingEmail se = new SendingEmail(1 ,email, myHash);
+						se.sendMail();
 						msgOK.put("InsertOK", "<Font color='red'>新增成功，請開始使用本系統</Font>");
 						response.sendRedirect("/dmot/_01_tr_register/register_success.jsp");
 						return;
 					} else {
 						errorMsg.put("errorIdDup", "新增此筆資料有誤(RegisterServlet)");
 					}
-				
-				
-				
+				}
 
 				// 5.依照 Business Logic 運算結果來挑選適當的畫面
 				if (!errorMsg.isEmpty()) {
@@ -246,7 +221,7 @@ public class Train_RegisterServletMP_new extends HttpServlet {
 	private void errorResponse(HttpServletRequest request, HttpServletResponse response, Map<String, String> errorMsg)
 			throws ServletException, IOException {
 		errorMsg.put("from", "signUp");
-		RequestDispatcher rd = request.getRequestDispatcher("/_02_login/tr-login.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/_02_login\\st-login.jsp");
 		rd.forward(request, response);
 	}
 
