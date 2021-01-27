@@ -6,16 +6,19 @@ import java.util.List;
 import _01_register.model.MemberBean;
 import _01_register.model.StudentBean;
 import _01_register.model.TrainerBean;
+import _01_register.model.Hibernate.MemberBean_H;
+import _01_register.model.Hibernate.TrainerBean_H;
 import model.GymBean;
 
 
 public interface MemberDao {
 	
-	public boolean idExists(String id);
+	public boolean idExists(int type , String email);
 
 	public int saveStudent(StudentBean mb) ;
 	
 	public int saveTrainer(TrainerBean tr) ;
+	
 	
 	
 	public MemberBean queryStudent(String id);
@@ -24,6 +27,8 @@ public interface MemberDao {
 
 	public MemberBean checkIdPassword(String email, String password);	
 	
+	public MemberBean_H checkIdPassword_H(String email, String password);	
+	
 	public List<StudentBean> listAll() ;
 	
 	public List<GymBean> gymList() ;
@@ -31,4 +36,5 @@ public interface MemberDao {
 //	void updateUnpaidOrderAmount(OrderBean ob);
 //
 //	public void setConnection(Connection con);
+
 }

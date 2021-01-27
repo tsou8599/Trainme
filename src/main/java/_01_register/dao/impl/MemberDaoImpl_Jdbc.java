@@ -17,6 +17,7 @@ import _01_register.dao.MemberDao;
 import _01_register.model.MemberBean;
 import _01_register.model.StudentBean;
 import _01_register.model.TrainerBean;
+import _01_register.model.Hibernate.MemberBean_H;
 import model.GymBean;
 
 // 本類別使用為標準的JDBC技術來存取資料庫。
@@ -39,7 +40,7 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 	// 儲存StudentBean物件，將參數sb新增到Student表格內。
 	public int saveStudent(StudentBean sb) {
 		String sql = "insert into student " + " (id, name, phone, birthday, "
-				+ " email,  password, id_number, sex)" + " values (null, ?, ?, ?, ?, ?, ?, ?)";
+				+ " email,  password, id_number, sex, hash)" + " values (null, ?, ?, ?, ?, ?, ?, ?,?)";
 		int n = 0;
 		try (Connection con = ds.getConnection(); PreparedStatement ps = con.prepareStatement(sql);) {
 
@@ -50,6 +51,7 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 			ps.setString(5, sb.getPassword());
 			ps.setString(6, sb.getId());
 			ps.setString(7, sb.getSex());
+			ps.setString(8, sb.getMyHash());
 
 			n = ps.executeUpdate();
 		} catch (Exception ex) {
@@ -64,8 +66,8 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 	public int saveTrainer(TrainerBean tr) {
 		String sql = "insert into trainer " 
 				   + " (id, name, phone, birthday, "
-				   + " email,  password, id_number, sex, year, gym_id)" 
-				   + " values (null, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				   + " email,  password, id_number, sex, year, gym_id, hash)" 
+				   + " values (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		int n = 0;
 		try (Connection con = ds.getConnection(); PreparedStatement ps = con.prepareStatement(sql);) {
 
@@ -78,6 +80,7 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 			ps.setString(7, tr.getSex());
 			ps.setInt(8, tr.getYear());
 			ps.setInt(9, tr.getGymId());
+			ps.setString(10, tr.getMyHash());
 			
 
 			n = ps.executeUpdate();
@@ -91,9 +94,15 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 	// 判斷參數id(會員帳號)是否已經被現有客戶使用，如果是，傳回true，表示此id不能使用，
 	// 否則傳回false，表示此id可使用。
 	@Override
-	public boolean idExists(String email) {
+	public boolean idExists(int type , String email) {
+		String sql = null;
 		boolean exist = false;
-		String sql = "SELECT * FROM student WHERE email = ?";
+		if(type == 1) {
+			 sql = "SELECT * FROM student WHERE email = ?";
+		}
+		if(type == 2) {
+			 sql = "SELECT * FROM trainer WHERE email = ?";
+		}
 		try (Connection connection = ds.getConnection(); PreparedStatement ps = connection.prepareStatement(sql);) {
 			ps.setString(1, email);
 			try (ResultSet rs = ps.executeQuery();) {
@@ -240,7 +249,6 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 				while (rs.next()) {
 					
 					verification = rs.getInt("verification");
-
 				}
 			}
 			
@@ -279,6 +287,12 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 	        tr.setSex(rs.getString("sex"));
 	        return tr;
 	    }
+
+	@Override
+	public MemberBean_H checkIdPassword_H(String email, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }

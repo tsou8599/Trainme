@@ -17,10 +17,12 @@ public class StudentBean extends MemberBean  {
 	String sex;
 	Integer verification;
 	Integer is_delete;
+	String myHash;
 	
 	
+		
 	public StudentBean(Integer stNo, Integer type, String name, String phone, String email, Date birth, String password,
-			String id, String sex, Integer verification, Integer is_delete) {
+			String id, String sex, Integer verification, Integer is_delete, String myHash) {
 		super();
 		this.stNo = stNo;
 		this.type = type;
@@ -33,8 +35,10 @@ public class StudentBean extends MemberBean  {
 		this.sex = sex;
 		this.verification = verification;
 		this.is_delete = is_delete;
+		this.myHash = myHash;
 	}
-	
+
+
 	public StudentBean() {
 		
 	}
@@ -147,6 +151,16 @@ public class StudentBean extends MemberBean  {
 
 	public void setIs_delete(Integer is_delete) {
 		this.is_delete = is_delete;
+	}
+
+
+	public String getMyHash() {
+		return myHash;
+	}
+
+
+	public void setMyHash(String myHash) {
+		this.myHash = myHash;
 	}
 	
 	

@@ -27,10 +27,14 @@ public class TrainerBean extends MemberBean {
 	Integer gymId;
 	Integer verification;
 	Integer is_delete;
+	String myHash;
+	
+	
 	
 	
 	public TrainerBean(Integer trNo, Integer type, String name, String phone, String email, Date birth, String password,
-			String id, String sex, Integer year, Integer gymId, Integer verification, Integer is_delete) {
+			String id, String sex, Integer year, Integer gymId, Integer verification, Integer is_delete,
+			String myHash) {
 		super();
 		this.trNo = trNo;
 		this.type = type;
@@ -45,8 +49,10 @@ public class TrainerBean extends MemberBean {
 		this.gymId = gymId;
 		this.verification = verification;
 		this.is_delete = is_delete;
+		this.myHash = myHash;
 	}
-	
+
+
 	public TrainerBean() {
 		
 	}
@@ -130,6 +136,16 @@ public class TrainerBean extends MemberBean {
 	public void setIs_delete(Integer is_delete) {
 		this.is_delete = is_delete;
 	}
+
+
+	public String getMyHash() {
+		return myHash;
+	}
+
+
+	public void setMyHash(String myHash) {
+		this.myHash = myHash;
+	}
 	
 	
 	
@@ -137,3 +153,4 @@ public class TrainerBean extends MemberBean {
 	
 
 }
+

@@ -327,7 +327,7 @@
   </head>
   <body>
     <section class="forms-section">
-      <h1 class="section-title">Animated Forms</h1>
+      <h1 class="section-title">學員註冊</h1>
       <div class="forms">
       
       
@@ -366,7 +366,7 @@
             Sign Up
             <span class="underline"></span>
           </button>
-          <form class="form form-signup" method="post" action="<c:url value='/dmot/_01_tr_register/Tr_RegisterServletMP_new.do'  />"  enctype="multipart/form-data" >
+          <form class="form form-signup" method="post" action="<c:url value='/dmot/_01_tr_register/Student_RegisterServletMP_new.do'  />"  enctype="multipart/form-data" >
             <fieldset>
               <legend>
                 Please, enter your email, password and password confirmation for

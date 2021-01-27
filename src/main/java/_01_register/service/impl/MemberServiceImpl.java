@@ -4,18 +4,21 @@ package _01_register.service.impl;
 
 import java.util.List;
 
+import org.hibernate.SessionFactory;
+
 import _01_register.dao.MemberDao;
 import _01_register.dao.impl.MemberDaoImpl_Jdbc;
 import _01_register.model.MemberBean;
 import _01_register.model.StudentBean;
 import _01_register.model.TrainerBean;
 import _01_register.service.MemberService;
-import _04_ShoppingCart.model.OrderBean;
 import model.GymBean;
 
 public class MemberServiceImpl implements MemberService {
+	
+	SessionFactory factory;
+	MemberDao dao;
 
-	MemberDao  dao ;
 	public MemberServiceImpl() {
 		this.dao = new MemberDaoImpl_Jdbc();
 	}
@@ -32,8 +35,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public boolean idExists(String id) {
-		return dao.idExists(id);
+	public boolean idExists(int type,String email) {
+		return dao.idExists(type,email);
 	}
 
 //	@Override
