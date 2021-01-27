@@ -64,9 +64,41 @@ public class MailDao {
 		}
     	
 		return i;
-    	
-    	
+ 
 	}
-	
-	
+    
+    // 檢查是否通過信箱驗證
+    public boolean checkPass(int type , String email ) {
+    	boolean pass = false;
+    	
+    	String MemType = "";
+//    	
+    	
+    	if(type == 1) {
+    		 MemType = "student";
+		}
+		if(type == 2) {
+			 MemType = "trainer";
+		}
+		
+    	String sql1 = "select verification from " + MemType + " where Email=? ";
+    	int i = 0;
+    	try (Connection con = ds.getConnection(); PreparedStatement ps = con.prepareStatement(sql1);) {
+    		
+    		ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				i = rs.getInt("verification");
+			}
+			if(i == 1) {
+		
+				pass = true;
+			}
+			
+    	} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return pass;
+    }
 }

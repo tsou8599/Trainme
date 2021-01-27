@@ -353,7 +353,7 @@
                 	<Font color='red' size="-3">${ErrorMsgKey.PasswordEmptyError}</Font>
                 </div>
               </div>
-              <Font color='red' size="-1"> ${ErrorMsgKey.LoginError} </Font>
+              <Font color='red' size="-1"> ${ErrorMsgKey.LoginError}${ErrorMsgKey.noPass}  </Font>
             </fieldset>
             <button type="submit" class="btn-login">Login</button>
           </form>

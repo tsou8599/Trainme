@@ -27,7 +27,7 @@ public interface MemberDao {
 
 	public MemberBean checkIdPassword(String email, String password);	
 	
-	public MemberBean_H checkIdPassword_H(String email, String password);	
+
 	
 	public List<StudentBean> listAll() ;
 	

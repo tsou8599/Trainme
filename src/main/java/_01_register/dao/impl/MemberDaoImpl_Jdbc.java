@@ -288,12 +288,6 @@ public class MemberDaoImpl_Jdbc implements MemberDao {
 	        return tr;
 	    }
 
-	@Override
-	public MemberBean_H checkIdPassword_H(String email, String password) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	
 }
 //	/*
