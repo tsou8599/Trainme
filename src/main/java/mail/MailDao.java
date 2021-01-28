@@ -27,10 +27,11 @@ public class MailDao {
 		}
 	}
     
-    
+    // 更改驗證狀態碼
     public int changeVerification(String type , String email , String hash) {
     	String MemType = "";
     	int typeInt = Integer.parseInt(type);
+    	// 判斷會員類型
     	if(typeInt == 1) {
     		 MemType = "student";
 		}
@@ -38,6 +39,7 @@ public class MailDao {
 			 MemType = "trainer";
 			
 		}
+		
     	String sql1 = "select email, Hash, verification from " + MemType + " where Email=? and Hash=? and verification='0'";
     	int i = 0;
     	try (Connection con = ds.getConnection(); PreparedStatement ps = con.prepareStatement(sql1);) {

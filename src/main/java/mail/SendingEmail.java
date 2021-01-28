@@ -44,7 +44,9 @@ public class SendingEmail {
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(email));
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(userEmail));
+			// 設定信件標題
 			message.setSubject("Email Verification Link");
+			// 設定信件內容
 			message.setText("Click this link to confirm your email address and complete setup for your account."
 					+ "\n\nVerification Link: " + "http://localhost:9090/trainme/ActivateAccount?key=" + type + "&key1=" + userEmail + "&key2=" + myHash);
 			

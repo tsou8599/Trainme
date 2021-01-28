@@ -18,6 +18,14 @@ public class StudentBean extends MemberBean  {
 	Integer verification;
 	Integer is_delete;
 	String myHash;
+//	======================個人資料
+	Integer area_id;
+	String address;
+	Double heigth;
+	Double weight;
+	String photo;
+	String nickname;
+	
 	
 	
 		
@@ -162,6 +170,69 @@ public class StudentBean extends MemberBean  {
 	public void setMyHash(String myHash) {
 		this.myHash = myHash;
 	}
+
+	
+//=======================================
+	
+	public Integer getArea_id() {
+		return area_id;
+	}
+	
+	
+	public void setArea_id(Integer area_id) {
+		this.area_id = area_id;
+	}
+	
+	
+	public String getAddress() {
+		return address;
+	}
+	
+	
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	
+	public Double getHeigth() {
+		return heigth;
+	}
+	
+	
+	public void setHeigth(Double heigth) {
+		this.heigth = heigth;
+	}
+	
+	
+	public Double getWeight() {
+		return weight;
+	}
+	
+	
+	public void setWeight(Double weight) {
+		this.weight = weight;
+	}
+	
+	
+	public String getPhoto() {
+		return photo;
+	}
+	
+	
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+	
+	
+	public String getNickname() {
+		return nickname;
+	}
+	
+	
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	
 	
 	
 	
